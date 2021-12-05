@@ -17,13 +17,11 @@ void main() async{
   if(_isPhone) {Variables.portraitMood;}
   else {Variables.landscapeMood;}
   pref.setBool('isPhone', _isPhone);
-  String phone = pref.getString('phone')??'';
-  runApp(MyApp(phone: phone));
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key,required this.phone}) : super(key: key);
-  String phone;
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +34,7 @@ class MyApp extends StatelessWidget {
         title: 'LegalFriend',
           theme: Variables.appTheme,
           debugShowCheckedModeBanner: false,
-          home: SplashScreen(phone: phone)
+          home:const SplashScreen()
       ),
     );
   }

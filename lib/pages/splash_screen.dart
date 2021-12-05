@@ -6,8 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({Key? key,required this.phone}) : super(key: key);
-  String phone;
+  const SplashScreen({Key? key}) : super(key: key);
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -18,14 +17,14 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     final DatabaseProvider databaseProvider = Provider.of<DatabaseProvider>(context,listen: false);
-    databaseProvider.getNIActDataList();
-    databaseProvider.getBiseshTribunalDataList();
-    databaseProvider.getMadokDataList();
-    databaseProvider.getRegisterUserList();
+    // databaseProvider.getNIActDataList();
+    // databaseProvider.getBiseshTribunalDataList();
+    // databaseProvider.getMadokDataList();
+    // databaseProvider.getRegisterUserList();
 
     Future.delayed(const Duration(seconds: 3)).then((value) =>
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>
-        widget.phone.isNotEmpty?const HomePage():const LogInPage()), (route) => false));
+        const HomePage()), (route) => false));
   }
 
   @override

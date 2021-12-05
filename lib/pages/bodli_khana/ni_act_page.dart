@@ -24,7 +24,6 @@ class NIActPage extends StatefulWidget {
 class _NIActPageState extends State<NIActPage>
     with SingleTickerProviderStateMixin {
   TabController? _tabController;
-  final ScrollController _scrollController = ScrollController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   String? _amoliAdalot;
@@ -207,10 +206,15 @@ class _NIActPageState extends State<NIActPage>
 
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text(Variables.nIAct),
         elevation: 00,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Text('মোট:- ${_filteredSubList.length}'),
+          )
+        ],
       ),
       body: Column(
         children: [
@@ -248,7 +252,6 @@ class _NIActPageState extends State<NIActPage>
             padding: const EdgeInsets.only(top: 10.0),
             child: Column(
               children: [
-
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: size*.04),
                   child: Row(
@@ -421,36 +424,6 @@ class _NIActPageState extends State<NIActPage>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ///Search Button
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: size* .008),
-                        child: OutlinedButton(
-                          onPressed: () => _filterList(),
-                          child: const Icon(Icons.search, color: Colors.grey),
-                        ),
-                      ),
-
-                      ///Clear Button
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: size* .008),
-                        child: OutlinedButton(
-                          onPressed: () => _clearFilter(),
-                          child: const Icon(Icons.clear, color: Colors.redAccent),
-                        ),
-                      ),
-
-                      ///Reload Button
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: size* .008),
-                        child: OutlinedButton(
-                          onPressed: () => _refreshData(databaseProvider),
-                          child: const Icon(Icons.refresh),
-                        ),
-                      ),
-
                       ///Download Button
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -464,6 +437,35 @@ class _NIActPageState extends State<NIActPage>
                             }
                           },
                           child: const Icon(Icons.save_alt,color: Colors.blueGrey),
+                        ),
+                      ),
+
+                      ///Reload Button
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: size* .008),
+                        child: OutlinedButton(
+                          onPressed: () => _refreshData(databaseProvider),
+                          child: const Icon(Icons.refresh),
+                        ),
+                      ),
+
+                      ///Clear Button
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: size* .008),
+                        child: OutlinedButton(
+                          onPressed: () => _clearFilter(),
+                          child: const Icon(Icons.clear, color: Colors.redAccent),
+                        ),
+                      ),
+                      ///Search Button
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: size* .008),
+                        child: OutlinedButton(
+                          onPressed: () => _filterList(),
+                          child: const Icon(Icons.search, color: Colors.grey),
                         ),
                       ),
                     ],
@@ -481,7 +483,98 @@ class _NIActPageState extends State<NIActPage>
                       child: ListView.builder(
                         physics: const ClampingScrollPhysics(),
                         itemCount: _filteredSubList.length,
-                        itemBuilder: (context, index) => Container(color: Colors.green,),
+                        itemBuilder: (context, index) => Card(
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(size*.02,size*.02,size*.02,0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                RichText(
+                                  text: TextSpan(
+                                    style: formTextStyle(size),
+                                    children: <TextSpan>[
+                                      const TextSpan(text: '${Variables.dayraNo}: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                                      TextSpan(text: '${_filteredSubList[index].dayraNo}\n'),
+                                      const TextSpan(text: '${Variables.crMamlaNo}: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                                      TextSpan(text: '${_filteredSubList[index].mamlaNo}\n'),
+                                      const TextSpan(text: '${Variables.pokkhogonerNam}: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                                      TextSpan(text: '${_filteredSubList[index].pokkhoDhara}\n'),
+                                      const TextSpan(text: '${Variables.porobortiTarikh}: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                                      TextSpan(text: '${_filteredSubList[index].porobortiTarikh}\n'),
+                                      const TextSpan(text: '${Variables.bicaricAdalot}: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                                      TextSpan(text: '${_filteredSubList[index].bicarikAdalot}\n'),
+                                      const TextSpan(text: '${Variables.amoliAdalot}: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                                      TextSpan(text: '${_filteredSubList[index].amoliAdalot}\n'),
+                                      const TextSpan(text: '${Variables.mamlarDhoron}: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                                      TextSpan(text: '${_filteredSubList[index].mamlarDhoron}\n'),
+                                      const TextSpan(text: '${Variables.boiNo}: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                                      TextSpan(text: '${_filteredSubList[index].boiNo}\n'),
+                                      const TextSpan(text: '${Variables.jojCourt}: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                                      TextSpan(text: '${_filteredSubList[index].jojCourt}'),
+                                    ],
+                                  ),
+                                ),
+
+                                ///Update & Delete Button
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    TextButton(
+                                      child: Text('আপডেট',
+                                          style: TextStyle(fontSize: size*.04)),
+                                      onPressed: (){},
+                                    ),
+                                    TextButton(
+                                        child: Text('ডিলিট',
+                                            style: TextStyle(color: Colors.redAccent,fontSize: size*.04)
+                                        ),
+                                        onPressed: (){
+                                          showAnimatedDialog(
+                                            context: context,
+                                            barrierDismissible: true,
+                                            builder: (BuildContext context) {
+                                              return ClassicGeneralDialogWidget(
+                                                titleText: 'Delete This Data?',
+                                                positiveText: 'YES',
+                                                negativeText: 'NO',
+                                                negativeTextStyle: TextStyle(
+                                                    color: Colors.green,
+                                                    fontSize: size*.04),
+                                                positiveTextStyle: TextStyle(
+                                                    color: Colors.redAccent,
+                                                    fontSize: size*.04),
+                                                onPositiveClick: () async{
+                                                  showLoadingDialog(context);
+                                                  await databaseProvider.deleteData(_filteredSubList[index].id!).then((value)async{
+                                                    if(value){
+                                                      await databaseProvider.getNIActDataList();
+                                                      closeLoadingDialog(context);
+                                                      closeLoadingDialog(context);
+                                                      showToast('Data Deleted Success');
+                                                    }else{
+                                                      closeLoadingDialog(context);
+                                                      closeLoadingDialog(context);
+                                                      showToast('Failed! Try Again');
+                                                    }
+                                                  });
+                                                },
+                                                onNegativeClick: () => Navigator.of(context).pop(),
+                                              );
+                                            },
+                                            animationType: DialogTransitionType.slideFromTopFade,
+                                            curve: Curves.fastOutSlowIn,
+                                            duration: const Duration(milliseconds: 500),
+                                          );
+                                        }
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
                       ),
                     )
                   : Center(
@@ -523,6 +616,7 @@ class _NIActPageState extends State<NIActPage>
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 SizedBox(height: size* .02),
+
                 Text(
                   '${Variables.mamlarDhoron} - ${Variables.nIAct}',
                   textAlign: TextAlign.center,
@@ -952,14 +1046,12 @@ class _NIActPageState extends State<NIActPage>
                     children: [
                       SizedBox(height: size*.04),
 
-                      ///joj amoli
+                      ///joj court
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          ///Joj Court Dropdown
                           Text(
                             '${Variables.jojCourt}- ',
-                            textAlign: TextAlign.end,
                             style: formTextStyle(size),
                           ),
                           Expanded(
@@ -996,11 +1088,16 @@ class _NIActPageState extends State<NIActPage>
                               ),
                             ),
                           ),
+                        ],
+                      ),
+                      SizedBox(height: size*.04),
 
-                          ///Amoli Adalot Dropdown
+                      ///Amoli Adalot
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
                           Text(
-                            '  ${Variables.amoliAdalot}- ',
-                            textAlign: TextAlign.end,
+                            '${Variables.amoliAdalot}- ',
                             style: formTextStyle(size),
                           ),
                           Expanded(

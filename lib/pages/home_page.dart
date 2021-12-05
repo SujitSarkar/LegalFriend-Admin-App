@@ -1,5 +1,9 @@
 import 'package:admin_app/pages/bodli_khana_list_page.dart';
+import 'package:admin_app/pages/change_password_page.dart';
 import 'package:admin_app/pages/dashboard_page.dart';
+import 'package:admin_app/pages/notice_board_page.dart';
+import 'package:admin_app/pages/payment_info_page.dart';
+import 'package:admin_app/pages/register_grahok_talika.dart';
 import 'package:admin_app/providers/database_provider.dart';
 import 'package:admin_app/providers/public_provider.dart';
 import 'package:admin_app/variables/static_variables.dart';
@@ -51,6 +55,14 @@ class _HomePageState extends State<HomePage> {
               Navigator.push(context, MaterialPageRoute(builder: (context)=>const DashBoardPage()));
             } else if(index==1) {
               Navigator.push(context, MaterialPageRoute(builder: (context)=>const BodliKhanaListPage()));
+            } else if(index==2) {
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>const RegisterGrahokTalika()));
+            } else if(index== 3){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>const PaymentInfoPage()));
+            } else if(index== 4){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>const NoticeBoardPage()));
+            } else if(index== 5){
+              Navigator.push(context, MaterialPageRoute(builder: (context)=>const ChangePasswordPage()));
             }
           },
           child: Container(

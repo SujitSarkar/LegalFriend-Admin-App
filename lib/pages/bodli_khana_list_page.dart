@@ -1,3 +1,4 @@
+import 'package:admin_app/pages/bodli_khana/madok_dondobidhi_page.dart';
 import 'package:admin_app/pages/bodli_khana/ni_act_page.dart';
 import 'package:admin_app/providers/database_provider.dart';
 import 'package:admin_app/providers/public_provider.dart';
@@ -5,6 +6,7 @@ import 'package:admin_app/variables/static_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'bodli_khana/bisesh_tribunal_page.dart';
 import 'dashboard_page.dart';
 
 class BodliKhanaListPage extends StatelessWidget {
@@ -27,6 +29,8 @@ class BodliKhanaListPage extends StatelessWidget {
         itemBuilder: (_,index)=>InkWell(
             onTap: (){
               if(index==0) Navigator.push(context, MaterialPageRoute(builder: (context)=>const NIActPage()));
+              if(index==1) Navigator.push(context, MaterialPageRoute(builder: (context)=>const MadokDondobidhiPage()));
+              if(index==2) Navigator.push(context, MaterialPageRoute(builder: (context)=>const BiseshTribunalPage()));
             },
             child: Container(
               height: size*.3,
