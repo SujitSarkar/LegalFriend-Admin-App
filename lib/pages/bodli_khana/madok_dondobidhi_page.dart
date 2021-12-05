@@ -14,6 +14,8 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
+import 'data_update_page.dart';
+
 class MadokDondobidhiPage extends StatefulWidget {
   const MadokDondobidhiPage({Key? key}) : super(key: key);
 
@@ -520,12 +522,16 @@ class _MadokDondobidhiPageState extends State<MadokDondobidhiPage>
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    TextButton(
+                                    databaseProvider.canUpdate?TextButton(
                                       child: Text('আপডেট',
                                           style: TextStyle(fontSize: size*.04)),
-                                      onPressed: (){},
-                                    ),
-                                    TextButton(
+                                      onPressed: (){
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=>DataUpdatePage(
+                                            bodliKhanaModel: _filteredSubList[index],
+                                            fromPage: Variables.madokDondobidhi)));
+                                      },
+                                    ):Container(),
+                                    databaseProvider.canDelete?TextButton(
                                         child: Text('ডিলিট',
                                             style: TextStyle(color: Colors.redAccent,fontSize: size*.04)
                                         ),
@@ -567,7 +573,7 @@ class _MadokDondobidhiPageState extends State<MadokDondobidhiPage>
                                             duration: const Duration(milliseconds: 500),
                                           );
                                         }
-                                    ),
+                                    ):Container(),
                                   ],
                                 ),
                               ],

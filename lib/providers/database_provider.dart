@@ -16,9 +16,6 @@ class DatabaseProvider extends ChangeNotifier{
 
   String _noticeBoardImageLink='';
 
-  // final List<BodliKhanaModel> _bodliKhanaList = [];
-  // get bodliKhanaList=> _bodliKhanaList;
-
   final List<BodliKhanaModel> _niActDataList = [];
   final List<BodliKhanaModel> _madokDataList = [];
   final List<BodliKhanaModel> _tribunalDataList = [];
@@ -41,6 +38,15 @@ class DatabaseProvider extends ChangeNotifier{
   get registerUserList=> _registerUserList;
   get paymentInfoList=> _paymentInfoList;
   get subAdminList=> _subAdminList;
+
+  bool _isAdmin = false;
+  get isAdmin=>_isAdmin;
+
+  bool _canUpdate = false;
+  get canUpdate=>_canUpdate;
+
+  bool _canDelete = false;
+  get canDelete=>_canDelete;
 
   Future<bool> getNoticeBoardImageLink()async{
     try{
@@ -326,15 +332,15 @@ class DatabaseProvider extends ChangeNotifier{
   }
 
   Future<bool> validateAdmin(String phone, String password)async{
-    SharedPreferences pref = await SharedPreferences.getInstance();
     try{
       QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('Admin')
           .where('phone', isEqualTo: phone).get();
       final List<QueryDocumentSnapshot> user = snapshot.docs;
       if(user.isNotEmpty && user[0].get('password')==password){
-        pref.setBool('canUpdate', true);
-        pref.setBool('canDelete', true);
-        pref.setBool('admin', true);
+        _canUpdate=true;
+        _canDelete=true;
+        _isAdmin=true;
+        notifyListeners();
         return true;
       }else{
         return false;
@@ -351,16 +357,15 @@ class DatabaseProvider extends ChangeNotifier{
   }
 
   Future<bool> validateSubAdmin(String username, String password)async{
-    SharedPreferences pref = await SharedPreferences.getInstance();
-
     try{
       QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('SubAdmin')
           .where('name', isEqualTo: username).get();
       final List<QueryDocumentSnapshot> user = snapshot.docs;
       if(user.isNotEmpty && user[0].get('password')==password){
-        pref.setBool('canUpdate', user[0].get('can_update'));
-        pref.setBool('canDelete', user[0].get('can_delete'));
-        pref.setBool('admin', false);
+        _canUpdate=user[0].get('can_update');
+        _canDelete=user[0].get('can_delete');
+        _isAdmin=false;
+        notifyListeners();
         return true;
       }else{
         return false;

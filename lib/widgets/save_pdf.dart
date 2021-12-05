@@ -1,6 +1,7 @@
-import 'dart:typed_data';
+import 'dart:io';
 import 'package:admin_app/model_class/bodli_khana_model.dart';
 import 'package:admin_app/variables/static_variables.dart';
+import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
@@ -12,7 +13,7 @@ class SavePDF{
   static Future<void> savePdf(List<BodliKhanaModel> dataList, String title,BuildContext context)async{
     showLoadingDialog(context);
     final pdf = pw.Document();
-    var data = await rootBundle.load("assets/font/kalpurush.ttf");
+    var data = await rootBundle.load("assets/font/NotoSansBengali-Regular.ttf");
     var myFont = pw.Font.ttf(data);
     var boldTextStyle = pw.TextStyle(
         font: myFont,
@@ -238,12 +239,13 @@ class SavePDF{
         //maxPages: 100
       ),
     );
-    Uint8List pdfInBytes = await pdf.save();
 
-
+    Directory?  downloadsDirectory = await DownloadsPathProvider.downloadsDirectory;
+    final file = File("${downloadsDirectory!.path}/${DateTime.now().millisecondsSinceEpoch}.pdf");
+    await file.writeAsBytes(await pdf.save());
     closeLoadingDialog(context);
+    showToast('Saved in Download Folder');
     Navigator.pop(context);
-
   }
 
 }

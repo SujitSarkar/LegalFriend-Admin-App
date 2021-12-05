@@ -1,3 +1,7 @@
+import 'package:admin_app/pages/bodli_khana/bisesh_tribunal_page.dart';
+import 'package:admin_app/pages/bodli_khana/madok_dondobidhi_page.dart';
+import 'package:admin_app/pages/bodli_khana/ni_act_page.dart';
+import 'package:admin_app/pages/register_grahok_talika.dart';
 import 'package:admin_app/providers/database_provider.dart';
 import 'package:admin_app/providers/public_provider.dart';
 import 'package:admin_app/variables/static_variables.dart';
@@ -7,8 +11,6 @@ import 'package:provider/provider.dart';
 
 class DashBoardPage extends StatefulWidget {
   const DashBoardPage({Key? key}) : super(key: key);
-
-
   @override
   _DashBoardPageState createState() => _DashBoardPageState();
 }
@@ -95,10 +97,18 @@ class _DashBoardPageState extends State<DashBoardPage> {
               ),
               TextButton(
                   onPressed: (){
-                    if(title=='রেজিস্টার\nগ্রাহক'){}
-                    else if(title=='এন.আই.\nএ্যাক্ট'){}
-                    else if(title=='মাদক/\nদন্ডবিধি'){}
-                    else if(title=='বিশেষ\nট্রাইব্যুনাল'){}
+                    if(title=='রেজিস্টার\nগ্রাহক'){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>const RegisterGrahokTalika()));
+                    }
+                    else if(title=='এন.আই.\nএ্যাক্ট'){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>const NIActPage()));
+                    }
+                    else if(title=='মাদক/\nদন্ডবিধি'){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>const MadokDondobidhiPage()));
+                    }
+                    else if(title=='বিশেষ\nট্রাইব্যুনাল'){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>const BiseshTribunalPage()));
+                    }
                   },
                   child: Text('View All',style: TextStyle(fontSize: size*.04,fontWeight: FontWeight.w400))
               )

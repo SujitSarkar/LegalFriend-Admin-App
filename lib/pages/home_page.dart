@@ -1,9 +1,11 @@
 import 'package:admin_app/pages/bodli_khana_list_page.dart';
 import 'package:admin_app/pages/change_password_page.dart';
 import 'package:admin_app/pages/dashboard_page.dart';
+import 'package:admin_app/pages/login_page.dart';
 import 'package:admin_app/pages/notice_board_page.dart';
 import 'package:admin_app/pages/payment_info_page.dart';
 import 'package:admin_app/pages/register_grahok_talika.dart';
+import 'package:admin_app/pages/sub_admin_page.dart';
 import 'package:admin_app/providers/database_provider.dart';
 import 'package:admin_app/providers/public_provider.dart';
 import 'package:admin_app/variables/static_variables.dart';
@@ -58,14 +60,26 @@ class _HomePageState extends State<HomePage> {
             } else if(index==2) {
               Navigator.push(context, MaterialPageRoute(builder: (context)=>const RegisterGrahokTalika()));
             } else if(index== 3){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>const PaymentInfoPage()));
+              if(databaseProvider.isAdmin){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>const PaymentInfoPage()));
+              }
             } else if(index== 4){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>const NoticeBoardPage()));
+              if(databaseProvider.isAdmin){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>const NoticeBoardPage()));
+              }
             } else if(index== 5){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>const ChangePasswordPage()));
+              if(databaseProvider.isAdmin){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>const ChangePasswordPage()));
+              }
+            } else if(index== 6){
+              if(databaseProvider.isAdmin){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=>const SubAdminPage()));
+              }
+            }else if(index==7){
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const LogInPage()), (route) => false);
             }
           },
-          child: Container(
+          child:  Container(
             padding: EdgeInsets.all(size*.02),
             alignment: Alignment.center,
             decoration: BoxDecoration(
@@ -78,7 +92,7 @@ class _HomePageState extends State<HomePage> {
               color: Theme.of(context).primaryColor,
               fontSize: size*.045,
               fontWeight: FontWeight.bold
-            ),),
+            )),
           ),
             borderRadius: BorderRadius.all(Radius.circular(size*.04))
         ),

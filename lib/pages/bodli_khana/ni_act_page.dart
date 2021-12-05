@@ -1,4 +1,5 @@
 import 'package:admin_app/model_class/bodli_khana_model.dart';
+import 'package:admin_app/pages/bodli_khana/data_update_page.dart';
 import 'package:admin_app/providers/database_provider.dart';
 import 'package:admin_app/providers/public_provider.dart';
 import 'package:admin_app/variables/static_variables.dart';
@@ -219,14 +220,12 @@ class _NIActPageState extends State<NIActPage>
       body: Column(
         children: [
           TabBar(controller: _tabController, tabs: [
-            Tab(
-                child: Text('এন.আই.এ্যাক্ট ড্যাটালিষ্ট',
+            Tab(child: Text('এন.আই.এ্যাক্ট ড্যাটালিষ্ট',
                     style: TextStyle(
                         fontSize: size* .04,
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold))),
-            Tab(
-                child: Text('ডাটা এন্ট্রি ড্যাশবোর্ড',
+            Tab(child: Text('ডাটা এন্ট্রি ড্যাশবোর্ড',
                     style: TextStyle(
                         fontSize: size* .04,
                         color: Theme.of(context).primaryColor,
@@ -521,12 +520,16 @@ class _NIActPageState extends State<NIActPage>
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    TextButton(
+                                    databaseProvider.canUpdate? TextButton(
                                       child: Text('আপডেট',
                                           style: TextStyle(fontSize: size*.04)),
-                                      onPressed: (){},
-                                    ),
-                                    TextButton(
+                                      onPressed: (){
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=>DataUpdatePage(
+                                            bodliKhanaModel: _filteredSubList[index],
+                                            fromPage: Variables.nIAct)));
+                                      },
+                                    ):Container(),
+                                    databaseProvider.canDelete?TextButton(
                                         child: Text('ডিলিট',
                                             style: TextStyle(color: Colors.redAccent,fontSize: size*.04)
                                         ),
@@ -568,7 +571,7 @@ class _NIActPageState extends State<NIActPage>
                                             duration: const Duration(milliseconds: 500),
                                           );
                                         }
-                                    ),
+                                    ):Container(),
                                   ],
                                 ),
                               ],

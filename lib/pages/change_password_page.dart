@@ -70,9 +70,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               TextFormField(
                 controller: _newPassword,
                 obscureText: _obscure2,
-                style: TextStyle(
-                    fontSize: size*.04
-                ),
+                style: TextStyle(fontSize: size*.04),
                 decoration: boxFormDecoration(size).copyWith(
                     labelText: 'নতুন পাসওয়ার্ড',
                     suffixIcon: IconButton(onPressed: (){
@@ -87,9 +85,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
               TextFormField(
                 controller: _confirmPassword,
                 obscureText: _obscure3,
-                style: TextStyle(
-                    fontSize: size*.04
-                ),
+                style: TextStyle(fontSize: size*.04),
                 decoration: boxFormDecoration(size).copyWith(
                     labelText: 'কনফার্ম পাসওয়ার্ড',
                     suffixIcon: IconButton(onPressed: (){

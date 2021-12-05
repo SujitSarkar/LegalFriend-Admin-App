@@ -23,6 +23,7 @@ dependencies:
   pdf: ^3.6.3
   flutter_device_type: ^0.4.0
   image_picker: ^0.8.4+4
+  downloads_path_provider_28: ^0.1.2
 
 dev_dependencies:
   flutter_test:
@@ -42,7 +43,11 @@ flutter:
   assets:
     - assets/
     - assets/font/kalpurush.ttf
+    - assets/font/NotoSansBengali-Regular.ttf
   fonts:
     - family: kalpurush
       fonts:
         - asset: assets/font/kalpurush.ttf
+    - family: NotoSans
+      fonts:
+        - asset: assets/font/NotoSansBengali-Regular.ttf

@@ -134,8 +134,6 @@ class _LogInPageState extends State<LogInPage> {
               if(value){
                 SharedPreferences pref = await SharedPreferences.getInstance();
                 pref.setString('phone', _phone.text);
-                pref.setBool('admin', true);
-                publicProvider.adminCheck();
                 setState(()=> _isLoading=false);
                 Navigator.pushAndRemoveUntil(context,AnimationPageRoute(navigateTo: const HomePage()), (route) => false);
               }else{
@@ -151,8 +149,6 @@ class _LogInPageState extends State<LogInPage> {
               if(value){
                 SharedPreferences pref = await SharedPreferences.getInstance();
                 pref.setString('phone', _phone.text);
-                pref.setBool('admin', false);
-                publicProvider.adminCheck();
                 setState(()=> _isLoading=false);
                 Navigator.pushAndRemoveUntil(context, AnimationPageRoute(navigateTo: const HomePage()), (route) => false);
               }else{
