@@ -1218,6 +1218,7 @@ class _NIActPageState extends State<NIActPage>
                                   }
                                   if(pdfDataList.isNotEmpty) {
                                     SavePDF.savePdf(pdfDataList,Variables.nIAct,context);
+                                    //SavePDF.syncfusionPDF(pdfDataList,Variables.nIAct,context);
                                   } else {
                                     showToast('কোন ডেটা খুজে পাওয়া যায়নি');
                                   }

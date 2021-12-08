@@ -248,8 +248,6 @@ class SavePDF{
     Navigator.pop(context);
   }
 
-
-
   static Future<void> syncfusionPDF(List<BodliKhanaModel> dataList, String title,BuildContext context)async{
     final syncfusion.PdfDocument pdfDocument = syncfusion.PdfDocument();
     final page = pdfDocument.pages.add();
@@ -260,35 +258,36 @@ class SavePDF{
     grid.headers.add(1);
 
     syncfusion.PdfGridRow header = grid.headers[0];
-    header.cells[0].value=Variables.dayraNo;
-    header.cells[1].value=Variables.crMamlaNo;
-    header.cells[2].value=Variables.pokkhogonerNam;
-    header.cells[3].value=Variables.porobortiTarikh;
-    header.cells[4].value=Variables.bicaricAdalot;
-    header.cells[5].value=Variables.amoliAdalot;
-    header.cells[6].value=Variables.mamlarDhoron;
-    header.cells[7].value=Variables.boiNo;
-    header.cells[8].value=Variables.jojCourt;
+    header.cells[0].value='Variables.dayraNo';
+    header.cells[1].value='Variables.crMamlaNo';
+    header.cells[2].value='Variables.pokkhogonerNam';
+    // header.cells[3].value=Variables.porobortiTarikh;
+    // header.cells[4].value=Variables.bicaricAdalot;
+    // header.cells[5].value=Variables.amoliAdalot;
+    // header.cells[6].value=Variables.mamlarDhoron;
+    // header.cells[7].value=Variables.boiNo;
+    // header.cells[8].value=Variables.jojCourt;
 
     syncfusion.PdfGridRow row = grid.rows.add();
-    row.cells[0].value=Variables.dayraNo;
-    row.cells[1].value=Variables.crMamlaNo;
-    row.cells[2].value=Variables.pokkhogonerNam;
-    row.cells[3].value=Variables.porobortiTarikh;
-    row.cells[4].value=Variables.bicaricAdalot;
-    row.cells[5].value=Variables.amoliAdalot;
-    row.cells[6].value=Variables.mamlarDhoron;
-    row.cells[7].value=Variables.boiNo;
-    row.cells[8].value=Variables.jojCourt;
+    row.cells[0].value='Variables.dayraNo';
+    row.cells[1].value='Variables.crMamlaNo';
+    row.cells[2].value='Variables.pokkhogonerNam';
+    // row.cells[3].value=Variables.porobortiTarikh;
+    // row.cells[4].value=Variables.bicaricAdalot;
+    // row.cells[5].value=Variables.amoliAdalot;
+    // row.cells[6].value=Variables.mamlarDhoron;
+    // row.cells[7].value=Variables.boiNo;
+    // row.cells[8].value=Variables.jojCourt;
 
-    grid.draw(page: pdfDocument.pages.add(),bounds: const Rect.fromLTWH(0,0,0,0));
+    grid.draw(page: page,bounds: const Rect.fromLTWH(0,0,0,0));
 
     List<int> bytes = pdfDocument.save();
-    pdfDocument.dispose();
+    //pdfDocument.dispose();
 
-    Directory?  downloadsDirectory = await DownloadsPathProvider.downloadsDirectory;
+    Directory? downloadsDirectory = await DownloadsPathProvider.downloadsDirectory;
     final file = File('${downloadsDirectory!.path}/ismail.pdf');
     await file.writeAsBytes(bytes,flush: true);
+    showToast('Saved');
   }
 
 }
