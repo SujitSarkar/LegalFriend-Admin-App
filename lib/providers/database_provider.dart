@@ -504,7 +504,8 @@ class DatabaseProvider extends ChangeNotifier{
         .replaceAll('%', '').replaceAll('\$', '').replaceAll('#', '').replaceAll('@', '')
         .replaceAll('!', '').replaceAll(',', '').replaceAll('.', '').replaceAll('?', '')
         .replaceAll('(', '').replaceAll(')', '').replaceAll('=', '').replaceAll('~', '')
-        .replaceAll('`', '');
+        .replaceAll('`', '').replaceAll('এ', '').replaceAll('{', '').replaceAll('}', '')
+        .replaceAll('[', '').replaceAll(']', '').replaceAll('বি', '');
     return enString;
   }
 }
