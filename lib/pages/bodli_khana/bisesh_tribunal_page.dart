@@ -13,7 +13,6 @@ import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
-
 import 'data_update_page.dart';
 
 class BiseshTribunalPage extends StatefulWidget {
@@ -31,7 +30,6 @@ class _BiseshTribunalPageState extends State<BiseshTribunalPage>
   final  FocusNode _dayraFocus=FocusNode();
   bool _thanaTapped=false;
   bool _isLoading = false;
-  int _counter = 0;
   String? _amoliAdalot;
   String? _jojCourt;
   final _formKey = GlobalKey<FormState>();
@@ -60,13 +58,10 @@ class _BiseshTribunalPageState extends State<BiseshTribunalPage>
   }
 
   Future<void> _customInit(DatabaseProvider databaseProvider) async {
-    setState(() => _counter++);
     if (databaseProvider.tribunalDataList.isEmpty) {
       setState(() => _isLoading = true);
-      await databaseProvider.getBiseshTribunalDataList().then((value) {
-        setState(() {
-          _isLoading = false;
-        });
+      await databaseProvider.getBishehTribunalDataList().then((value) {
+        setState(()=> _isLoading = false);
         setState(() {
           _subList = databaseProvider.tribunalDataList;
           _filteredSubList = _subList;
@@ -189,7 +184,7 @@ class _BiseshTribunalPageState extends State<BiseshTribunalPage>
 
   Future<void> _refreshData(DatabaseProvider databaseProvider) async {
     setState(() => _isLoading = true);
-    await databaseProvider.getBiseshTribunalDataList().then((value) {
+    await databaseProvider.getBishehTribunalDataList().then((value) {
       setState(() {
         _subList = databaseProvider.tribunalDataList;
         _filteredSubList = _subList;
@@ -203,10 +198,10 @@ class _BiseshTribunalPageState extends State<BiseshTribunalPage>
     final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
     final DatabaseProvider databaseProvider = Provider.of<DatabaseProvider>(context);
     final double size = publicProvider.size;
-    if (_counter == 0) _customInit(databaseProvider);
 
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text(Variables.bisesTribunal),
         elevation: 00,
@@ -219,15 +214,20 @@ class _BiseshTribunalPageState extends State<BiseshTribunalPage>
       ),
       body: Column(
         children: [
-          TabBar(controller: _tabController, tabs: [
+          TabBar(controller: _tabController,
+              onTap: (int val)async{
+                if(val==1 && databaseProvider.isAdmin){
+                  _customInit(databaseProvider);
+                }},
+              tabs: [
             Tab(
-                child: Text('বিশেষ ট্রাইব্যুনাল ড্যাটালিষ্ট',
+                child: Text('ডাটা এন্ট্রি ড্যাশবোর্ড',
                     style: TextStyle(
                         fontSize: size* .04,
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold))),
             Tab(
-                child: Text('ডাটা এন্ট্রি ড্যাশবোর্ড',
+                child: Text('বিশেষ ট্রাইব্যুনাল ড্যাটালিষ্ট',
                     style: TextStyle(
                         fontSize: size* .04,
                         color: Theme.of(context).primaryColor,
@@ -235,8 +235,8 @@ class _BiseshTribunalPageState extends State<BiseshTribunalPage>
           ]),
           Expanded(
             child: TabBarView(controller: _tabController, children: [
-              _allDataWidget(size, publicProvider, databaseProvider),
               _dataEntryWidget(size, publicProvider, databaseProvider),
+              _allDataWidget(size, publicProvider, databaseProvider),
             ]),
           ),
         ],
@@ -447,7 +447,11 @@ class _BiseshTribunalPageState extends State<BiseshTribunalPage>
                         padding: EdgeInsets.symmetric(
                             horizontal: size* .008),
                         child: OutlinedButton(
-                          onPressed: () => _refreshData(databaseProvider),
+                          onPressed: (){
+                            if(databaseProvider.isAdmin){
+                              _refreshData(databaseProvider);
+                            }
+                          },
                           child: const Icon(Icons.refresh),
                         ),
                       ),
@@ -528,7 +532,7 @@ class _BiseshTribunalPageState extends State<BiseshTribunalPage>
                               onPressed: (){
                                 Navigator.push(context, MaterialPageRoute(builder: (context)=>DataUpdatePage(
                                     bodliKhanaModel: _filteredSubList[index],
-                                    fromPage: Variables.bisesTribunal)));
+                                    fromPage: Variables.bisesTribunal,index: index)));
                               },
                             ):Container(),
                             databaseProvider.canDelete?TextButton(
@@ -552,9 +556,8 @@ class _BiseshTribunalPageState extends State<BiseshTribunalPage>
                                             fontSize: size*.04),
                                         onPositiveClick: () async{
                                           showLoadingDialog(context);
-                                          await databaseProvider.deleteData(_filteredSubList[index].id!).then((value)async{
+                                          await databaseProvider.deleteData(_filteredSubList[index].id!,Variables.bisesTribunal,index).then((value)async{
                                             if(value){
-                                              await databaseProvider.getNIActDataList();
                                               closeLoadingDialog(context);
                                               closeLoadingDialog(context);
                                               showToast('Data Deleted Success');
@@ -584,17 +587,16 @@ class _BiseshTribunalPageState extends State<BiseshTribunalPage>
               : Center(
               child: Column(
                 children: [
-                  const SizedBox(height: 100),
+                  const SizedBox(height: 10),
                   Text('কোন ডেটা নেই!',
                       style: TextStyle(
                           fontSize: size* .04,
                           color: const Color(0xffF5B454))),
                   TextButton(
                       onPressed: () async {
-                        setState(() => _isLoading = true);
-                        await databaseProvider.getMadokDataList().then((value) {
-                          setState(() => _isLoading = false);
-                        });
+                        if(databaseProvider.isAdmin){
+                          _refreshData(databaseProvider);
+                        }
                       },
                       child: Text(
                         'রিফ্রেশ করুন',
@@ -866,7 +868,7 @@ class _BiseshTribunalPageState extends State<BiseshTribunalPage>
                                         _thanaTapped=!_thanaTapped;
                                         _thanaNameController.text=_filteredThanaList[index];
                                         _mamlaNo=_filteredThanaList[index];
-                                        print(_mamlaNo=_filteredThanaList[index]);
+
                                       });
                                     },
                                     child: Text(_filteredThanaList[index],
@@ -1041,8 +1043,9 @@ class _BiseshTribunalPageState extends State<BiseshTribunalPage>
             setState(() => _isLoading = false);
           }
         });
-      } else
+      } else {
         showToast('সকল ফর্ম পূরন করুন');
+      }
     }
 
   }
@@ -1105,7 +1108,7 @@ class _BiseshTribunalPageState extends State<BiseshTribunalPage>
                                   }).toList(),
                                   onChanged: (String? newValue) {
                                     setState(() => _pdfJojCourt = newValue!);
-                                    print(_pdfJojCourt);},
+                                    },
                                   dropdownColor: Colors.white,
                                 ),
                               ),

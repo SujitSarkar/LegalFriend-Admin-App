@@ -17,14 +17,14 @@ class DashBoardPage extends StatefulWidget {
 
 class _DashBoardPageState extends State<DashBoardPage> {
   int _counter=0;
-  bool _isLoading=true;
+  bool _isLoading=false;
 
   Future<void> _customInit(DatabaseProvider databaseProvider,BuildContext context)async{
     _counter++;
     if(databaseProvider.registerUserList.isEmpty) await databaseProvider.getRegisterUserList();
     if(databaseProvider.niActDataList.isEmpty) await databaseProvider.getNIActDataList();
     if(databaseProvider.madokDataList.isEmpty) await databaseProvider.getMadokDataList();
-    if(databaseProvider.tribunalDataList.isEmpty) await databaseProvider.getBiseshTribunalDataList();
+    if(databaseProvider.tribunalDataList.isEmpty) await databaseProvider.getBishehTribunalDataList();
     setState(()=> _isLoading = false);
   }
 
@@ -33,8 +33,7 @@ class _DashBoardPageState extends State<DashBoardPage> {
     final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
     final DatabaseProvider databaseProvider = Provider.of<DatabaseProvider>(context);
     final double size = publicProvider.size;
-
-    if(_counter==0) _customInit(databaseProvider,context);
+    //if(_counter==0) _customInit(databaseProvider,context);
 
     return Scaffold(
       backgroundColor: Colors.white,

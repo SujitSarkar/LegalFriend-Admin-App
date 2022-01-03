@@ -81,7 +81,7 @@ class _LogInPageState extends State<LogInPage> {
 
               ///Radio Button
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Row(
                     children: [

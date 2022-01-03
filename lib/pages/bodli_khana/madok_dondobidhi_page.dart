@@ -13,7 +13,6 @@ import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
-
 import 'data_update_page.dart';
 
 class MadokDondobidhiPage extends StatefulWidget {
@@ -31,7 +30,6 @@ class _MadokDondobidhiPageState extends State<MadokDondobidhiPage>
   final FocusNode _dayraFocus=FocusNode();
   bool _thanaTapped=false;
   bool _isLoading = false;
-  int _counter = 0;
   String? _amoliAdalot;
   String? _jojCourt;
   final _formKey = GlobalKey<FormState>();
@@ -60,13 +58,10 @@ class _MadokDondobidhiPageState extends State<MadokDondobidhiPage>
   }
 
   Future<void> _customInit(DatabaseProvider databaseProvider) async {
-    setState(() => _counter++);
     if (databaseProvider.madokDataList.isEmpty) {
       setState(() => _isLoading = true);
       await databaseProvider.getMadokDataList().then((value) {
-        setState(() {
-          _isLoading = false;
-        });
+        setState(()=>_isLoading = false);
         setState(() {
           _subList = databaseProvider.madokDataList;
           _filteredSubList = _subList;
@@ -203,9 +198,10 @@ class _MadokDondobidhiPageState extends State<MadokDondobidhiPage>
     final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
     final DatabaseProvider databaseProvider = Provider.of<DatabaseProvider>(context);
     final double size = publicProvider.size;
-    if (_counter == 0) _customInit(databaseProvider);
+
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text(Variables.madokDondobidhi),
         elevation: 00,
@@ -218,16 +214,21 @@ class _MadokDondobidhiPageState extends State<MadokDondobidhiPage>
       ),
       body: Column(
         children: [
-          TabBar(controller: _tabController, tabs: [
+          TabBar(controller: _tabController,
+              onTap: (int val)async{
+                if(val==1 && databaseProvider.isAdmin){
+                  await _customInit(databaseProvider);
+                }},
+              tabs: [
             Tab(
-                child: Text('মাদক/দন্ডবিধি ড্যাটালিষ্ট',
+                child: Text('ডাটা এন্ট্রি ড্যাশবোর্ড',
                     style: TextStyle(
                         fontSize: size* .04,
                         color: Theme.of(context).primaryColor,
                         fontFamily: 'hindSiliguri',
                         fontWeight: FontWeight.bold))),
             Tab(
-                child: Text('ডাটা এন্ট্রি ড্যাশবোর্ড',
+                child: Text('মাদক/দন্ডবিধি ড্যাটালিষ্ট',
                     style: TextStyle(
                         fontSize: size* .04,
                         color: Theme.of(context).primaryColor,
@@ -236,8 +237,8 @@ class _MadokDondobidhiPageState extends State<MadokDondobidhiPage>
           ]),
           Expanded(
             child: TabBarView(controller: _tabController, children: [
-              _allDataWidget(size, publicProvider, databaseProvider),
               _dataEntryWidget(size, publicProvider, databaseProvider),
+              _allDataWidget(size, publicProvider, databaseProvider),
             ]),
           ),
         ],
@@ -447,7 +448,11 @@ class _MadokDondobidhiPageState extends State<MadokDondobidhiPage>
                         padding: EdgeInsets.symmetric(
                             horizontal: size* .008),
                         child: OutlinedButton(
-                          onPressed: () => _refreshData(databaseProvider),
+                          onPressed: (){
+                            if(databaseProvider.isAdmin){
+                              _refreshData(databaseProvider);
+                            }
+                          },
                           child: const Icon(Icons.refresh),
                         ),
                       ),
@@ -528,7 +533,7 @@ class _MadokDondobidhiPageState extends State<MadokDondobidhiPage>
                                       onPressed: (){
                                         Navigator.push(context, MaterialPageRoute(builder: (context)=>DataUpdatePage(
                                             bodliKhanaModel: _filteredSubList[index],
-                                            fromPage: Variables.madokDondobidhi)));
+                                            fromPage: Variables.madokDondobidhi,index: index)));
                                       },
                                     ):Container(),
                                     databaseProvider.canDelete?TextButton(
@@ -552,9 +557,8 @@ class _MadokDondobidhiPageState extends State<MadokDondobidhiPage>
                                                     fontSize: size*.04),
                                                 onPositiveClick: () async{
                                                   showLoadingDialog(context);
-                                                  await databaseProvider.deleteData(_filteredSubList[index].id!).then((value)async{
+                                                  await databaseProvider.deleteData(_filteredSubList[index].id!,Variables.madokDondobidhi,index).then((value)async{
                                                     if(value){
-                                                      await databaseProvider.getNIActDataList();
                                                       closeLoadingDialog(context);
                                                       closeLoadingDialog(context);
                                                       showToast('Data Deleted Success');
@@ -584,17 +588,16 @@ class _MadokDondobidhiPageState extends State<MadokDondobidhiPage>
                   : Center(
                       child: Column(
                       children: [
-                        const SizedBox(height: 100),
+                        const SizedBox(height: 10),
                         Text('কোন ডেটা নেই!',
                             style: TextStyle(
                                 fontSize: size* .04,
                                 color: const Color(0xffF5B454))),
                         TextButton(
                             onPressed: () async {
-                              setState(() => _isLoading = true);
-                              await databaseProvider.getMadokDataList().then((value) {
-                                setState(() => _isLoading = false);
-                              });
+                              if(databaseProvider.isAdmin){
+                                _refreshData(databaseProvider);
+                              }
                             },
                             child: Text(
                               'রিফ্রেশ করুন',

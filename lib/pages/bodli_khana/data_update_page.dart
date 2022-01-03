@@ -10,9 +10,10 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class DataUpdatePage extends StatefulWidget {
-  const DataUpdatePage({Key? key,required this.bodliKhanaModel,required this.fromPage}) : super(key: key);
+  const DataUpdatePage({Key? key,required this.bodliKhanaModel,required this.fromPage,required this.index}) : super(key: key);
   final BodliKhanaModel bodliKhanaModel;
   final String fromPage;
+  final int index;
 
   @override
   _DataUpdatePageState createState() => _DataUpdatePageState();
@@ -339,7 +340,20 @@ class _DataUpdatePageState extends State<DataUpdatePage> {
           'boi_no': _boiNo.text,
           'joj_court': _jojCourt!
         };
-        await databaseProvider.updateData(widget.bodliKhanaModel.id!, map).then((value)async{
+        BodliKhanaModel bodliKhanaModel = BodliKhanaModel();
+
+        bodliKhanaModel.id=widget.bodliKhanaModel.id!;
+        bodliKhanaModel.amoliAdalot=_amoliAdalot!;
+        bodliKhanaModel.bicarikAdalot=_bicarikAdalot.text;
+        bodliKhanaModel.boiNo=_boiNo.text;
+        bodliKhanaModel.dayraNo=_dayraNo.text;
+        bodliKhanaModel.mamlaNo=_mamlaNo.text;
+        bodliKhanaModel.pokkhoDhara=_pokkho_dhara.text;
+        bodliKhanaModel.porobortiTarikh=_nextDate.text;
+        bodliKhanaModel.jojCourt=_jojCourt!;
+        bodliKhanaModel.mamlarDhoron=widget.bodliKhanaModel.mamlarDhoron;
+
+        await databaseProvider.updateData(widget.bodliKhanaModel.id!, map,widget.fromPage,bodliKhanaModel,widget.index).then((value)async{
           if(value){
             showToast('Data Updated');
             setState(()=>_isLoading=false);

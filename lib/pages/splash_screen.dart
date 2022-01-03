@@ -1,6 +1,4 @@
-import 'package:admin_app/pages/home_page.dart';
 import 'package:admin_app/pages/login_page.dart';
-import 'package:admin_app/providers/database_provider.dart';
 import 'package:admin_app/providers/public_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -16,13 +14,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    final DatabaseProvider databaseProvider = Provider.of<DatabaseProvider>(context,listen: false);
-    // databaseProvider.getNIActDataList();
-    // databaseProvider.getBiseshTribunalDataList();
-    // databaseProvider.getMadokDataList();
-    // databaseProvider.getRegisterUserList();
-
-    Future.delayed(const Duration(seconds: 3)).then((value) =>
+    Future.delayed(const Duration(seconds: 2)).then((value) =>
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>
         const LogInPage()), (route) => false));
   }

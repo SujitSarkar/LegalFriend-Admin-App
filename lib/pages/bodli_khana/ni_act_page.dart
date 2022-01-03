@@ -29,7 +29,6 @@ class _NIActPageState extends State<NIActPage>
   bool _isLoading = false;
   String? _amoliAdalot;
   String? _jojCourt;
-  int _counter = 0;
   final FocusNode _dayraFocus=FocusNode();
 
   final TextEditingController _dayraNo = TextEditingController(text: '');
@@ -59,13 +58,10 @@ class _NIActPageState extends State<NIActPage>
   }
 
   Future<void> _customInit(DatabaseProvider databaseProvider) async {
-    _counter++;
     if (databaseProvider.niActDataList.isEmpty) {
       setState(() => _isLoading = true);
       await databaseProvider.getNIActDataList().then((value) {
-        setState(() {
-          _isLoading = false;
-        });
+        setState(()=> _isLoading = false);
         setState(() {
           _subList = databaseProvider.niActDataList;
           _filteredSubList = _subList;
@@ -203,10 +199,11 @@ class _NIActPageState extends State<NIActPage>
     final PublicProvider publicProvider = Provider.of<PublicProvider>(context);
     final DatabaseProvider databaseProvider = Provider.of<DatabaseProvider>(context);
     final double size = publicProvider.size;
-    if (_counter == 0) _customInit(databaseProvider);
+
 
     return Scaffold(
       backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text(Variables.nIAct),
         elevation: 00,
@@ -219,23 +216,28 @@ class _NIActPageState extends State<NIActPage>
       ),
       body: Column(
         children: [
-          TabBar(controller: _tabController, tabs: [
+          TabBar(controller: _tabController,
+              onTap: (int val)async{
+                if(val==1 && databaseProvider.isAdmin){
+                  await _customInit(databaseProvider);
+                }},
+              tabs: [
+            Tab(child: Text('ডাটা এন্ট্রি ড্যাশবোর্ড',
+                style: TextStyle(
+                    fontSize: size* .04,
+                    color: Theme.of(context).primaryColor,
+                    fontFamily: 'hindSiliguri',
+                    fontWeight: FontWeight.bold))),
             Tab(child: Text('এন.আই.এ্যাক্ট ড্যাটালিষ্ট',
                     style: TextStyle(
                         fontSize: size* .04,
                         color: Theme.of(context).primaryColor,
                         fontWeight: FontWeight.bold))),
-            Tab(child: Text('ডাটা এন্ট্রি ড্যাশবোর্ড',
-                    style: TextStyle(
-                        fontSize: size* .04,
-                        color: Theme.of(context).primaryColor,
-                        fontFamily: 'hindSiliguri',
-                        fontWeight: FontWeight.bold))),
           ]),
           Expanded(
             child: TabBarView(controller: _tabController, children: [
-              _allDataWidget(size, publicProvider, databaseProvider),
               _dataEntryWidget(size, publicProvider, databaseProvider),
+              _allDataWidget(size, publicProvider, databaseProvider),
             ]),
           ),
         ],
@@ -444,7 +446,11 @@ class _NIActPageState extends State<NIActPage>
                         padding: EdgeInsets.symmetric(
                             horizontal: size* .008),
                         child: OutlinedButton(
-                          onPressed: () => _refreshData(databaseProvider),
+                          onPressed: (){
+                            if(databaseProvider.isAdmin){
+                              _refreshData(databaseProvider);
+                            }
+                          },
                           child: const Icon(Icons.refresh),
                         ),
                       ),
@@ -526,7 +532,8 @@ class _NIActPageState extends State<NIActPage>
                                       onPressed: (){
                                         Navigator.push(context, MaterialPageRoute(builder: (context)=>DataUpdatePage(
                                             bodliKhanaModel: _filteredSubList[index],
-                                            fromPage: Variables.nIAct)));
+                                            fromPage: Variables.nIAct,
+                                            index: index)));
                                       },
                                     ):Container(),
                                     databaseProvider.canDelete?TextButton(
@@ -550,9 +557,8 @@ class _NIActPageState extends State<NIActPage>
                                                     fontSize: size*.04),
                                                 onPositiveClick: () async{
                                                   showLoadingDialog(context);
-                                                  await databaseProvider.deleteData(_filteredSubList[index].id!).then((value)async{
+                                                  await databaseProvider.deleteData(_filteredSubList[index].id!,Variables.nIAct,index).then((value)async{
                                                     if(value){
-                                                      await databaseProvider.getNIActDataList();
                                                       closeLoadingDialog(context);
                                                       closeLoadingDialog(context);
                                                       showToast('Data Deleted Success');
@@ -585,18 +591,16 @@ class _NIActPageState extends State<NIActPage>
                         mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        const SizedBox(height: 10),
                         Text('কোন ডেটা নেই!',
                             style: TextStyle(
                                 fontSize: size* .04,
                                 color: const Color(0xffF5B454))),
                         TextButton(
                             onPressed: () async {
-                              setState(() => _isLoading = true);
-                              await databaseProvider
-                                  .getNIActDataList()
-                                  .then((value) {
-                                setState(() => _isLoading = false);
-                              });
+                              if(databaseProvider.isAdmin){
+                                _refreshData(databaseProvider);
+                              }
                             },
                             child: Text(
                               'রিফ্রেশ করুন',
