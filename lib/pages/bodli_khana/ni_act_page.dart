@@ -7,13 +7,11 @@ import 'package:admin_app/widgets/form_decoration.dart';
 import 'package:admin_app/widgets/gradient_button.dart';
 import 'package:admin_app/widgets/notification_widget.dart';
 import 'package:admin_app/widgets/save_pdf.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animated_dialog/flutter_animated_dialog.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
-import 'package:flutter/services.dart';
 
 class NIActPage extends StatefulWidget {
   const NIActPage({Key? key}) : super(key: key);
@@ -219,7 +217,7 @@ class _NIActPageState extends State<NIActPage>
           TabBar(controller: _tabController,
               onTap: (int val)async{
                 if(val==1 && databaseProvider.isAdmin){
-                  await _customInit(databaseProvider);
+                  _customInit(databaseProvider);
                 }},
               tabs: [
             Tab(child: Text('ডাটা এন্ট্রি ড্যাশবোর্ড',
@@ -499,7 +497,7 @@ class _NIActPageState extends State<NIActPage>
                                   text: TextSpan(
                                     style: formTextStyle(size),
                                     children: <TextSpan>[
-                                      const TextSpan(text: '${Variables.dayraNo}: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                                       TextSpan(text: '${Variables.dayraNo}: ', style: TextStyle(fontWeight: FontWeight.bold)),
                                       TextSpan(text: '${_filteredSubList[index].dayraNo}\n'),
                                       const TextSpan(text: '${Variables.crMamlaNo}: ', style: TextStyle(fontWeight: FontWeight.bold)),
                                       TextSpan(text: '${_filteredSubList[index].mamlaNo}\n'),

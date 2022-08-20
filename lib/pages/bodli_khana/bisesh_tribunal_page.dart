@@ -61,10 +61,10 @@ class _BiseshTribunalPageState extends State<BiseshTribunalPage>
     if (databaseProvider.tribunalDataList.isEmpty) {
       setState(() => _isLoading = true);
       await databaseProvider.getBishehTribunalDataList().then((value) {
-        setState(()=> _isLoading = false);
         setState(() {
           _subList = databaseProvider.tribunalDataList;
           _filteredSubList = _subList;
+          _isLoading = false;
         });
       });
     } else {
@@ -201,7 +201,7 @@ class _BiseshTribunalPageState extends State<BiseshTribunalPage>
 
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: false,
+      //resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text(Variables.bisesTribunal),
         elevation: 00,
@@ -215,7 +215,7 @@ class _BiseshTribunalPageState extends State<BiseshTribunalPage>
       body: Column(
         children: [
           TabBar(controller: _tabController,
-              onTap: (int val)async{
+              onTap: (int val){
                 if(val==1 && databaseProvider.isAdmin){
                   _customInit(databaseProvider);
                 }},
@@ -483,7 +483,7 @@ class _BiseshTribunalPageState extends State<BiseshTribunalPage>
 
           _isLoading
               ? Center(child: spinCircle())
-              : _filteredSubList.isNotEmpty
+               : _filteredSubList.isNotEmpty
               ? Expanded(
               child: ListView.builder(
                 physics: const ClampingScrollPhysics(),

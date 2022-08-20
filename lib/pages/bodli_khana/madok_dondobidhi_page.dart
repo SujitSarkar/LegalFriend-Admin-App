@@ -217,7 +217,7 @@ class _MadokDondobidhiPageState extends State<MadokDondobidhiPage>
           TabBar(controller: _tabController,
               onTap: (int val)async{
                 if(val==1 && databaseProvider.isAdmin){
-                  await _customInit(databaseProvider);
+                  _customInit(databaseProvider);
                 }},
               tabs: [
             Tab(

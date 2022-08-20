@@ -6,7 +6,6 @@ import 'package:admin_app/model_class/sub_admin_model.dart';
 import 'package:admin_app/variables/static_variables.dart';
 import 'package:admin_app/widgets/notification_widget.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -129,67 +128,13 @@ class DatabaseProvider extends ChangeNotifier{
     }
   }
 
-  // Future<void> getBodliKhanaDataList()async{
-  //   final String todayDate = DateFormat("dd-MM-yyyy").format(DateTime.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch));
-  //   try{
-  //     await FirebaseFirestore.instance.collection('BodliKhana').get().then((snapshot){
-  //       _bodliKhanaList.clear();
-  //       _niActDataList.clear();
-  //       _madokDataList.clear();
-  //       _tribunalDataList.clear();
-  //       _newNIActData=0;
-  //       _newMadokData=0;
-  //       _newTribunalData=0;
-  //       for (var element in snapshot.docChanges) {
-  //         BodliKhanaModel bodliKhanaModel = BodliKhanaModel(
-  //           id: element.doc['id'],
-  //           amoliAdalot: element.doc['amoli_adalot'],
-  //           bicarikAdalot: element.doc['bicarik_adalot'],
-  //           boiNo: element.doc['boi_no'],
-  //           dayraNo: element.doc['dayra_no'],
-  //           entryDate: element.doc['entry_date'],
-  //           mamlaNo: element.doc['mamla_no'],
-  //           mamlarDhoron: element.doc['mamlar_dhoron'],
-  //           pokkhoDhara: element.doc['pokkho_dhara'],
-  //           porobortiTarikh: element.doc['poroborti_tarikh'],
-  //           jojCourt: element.doc['joj_court']
-  //         );
-  //         _bodliKhanaList.add(bodliKhanaModel);
-  //       }
-  //     });
-  //     ///Sorting Data
-  //     _bodliKhanaList.sort((a,b)=>  int.parse(bnToEnNumberConvert(a.dayraNo!))
-  //         .compareTo(int.parse(bnToEnNumberConvert(b.dayraNo!))));
-  //
-  //     //_bodliKhanaList.sort((a,b)=>  a.dayraNo.compareTo(b.dayraNo ));
-  //
-  //     for(int i=0; i<_bodliKhanaList.length; i++){
-  //       if(_bodliKhanaList[i].mamlarDhoron==Variables.nIAct){
-  //         _niActDataList.add(_bodliKhanaList[i]);
-  //         if(_bodliKhanaList[i].entryDate==todayDate) _newNIActData++;
-  //       }
-  //       else if(_bodliKhanaList[i].mamlarDhoron==Variables.madokDondobidhi){
-  //         _madokDataList.add(_bodliKhanaList[i]);
-  //         if(_bodliKhanaList[i].entryDate==todayDate) _newMadokData++;
-  //       }
-  //       else if(_bodliKhanaList[i].mamlarDhoron==Variables.bisesTribunal){
-  //         _tribunalDataList.add(_bodliKhanaList[i]);
-  //         if(_bodliKhanaList[i].entryDate==todayDate) _newTribunalData++;
-  //       }
-  //     }
-  //     notifyListeners();
-  //   }catch(error){
-  //     showToast(error.toString());
-  //   }
-  // }
-
   Future<void> getNIActDataList()async{
     final String todayDate = DateFormat("dd-MM-yyyy").format(DateTime.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch));
     try{
       await FirebaseFirestore.instance.collection('NIAct').get().then((snapshot){
         _niActDataList.clear();
         _newNIActData=0;
-        snapshot.docChanges.forEach((element) {
+        for (var element in snapshot.docChanges) {
           BodliKhanaModel bodliKhanaModel = BodliKhanaModel(
               id: element.doc['id'],
               amoliAdalot: element.doc['amoli_adalot'],
@@ -205,7 +150,7 @@ class DatabaseProvider extends ChangeNotifier{
           );
           _niActDataList.add(bodliKhanaModel);
           if(element.doc['entry_date']==todayDate) _newNIActData++;
-        });
+        }
       });
       ///Sorting Data
       _niActDataList.sort((a,b)=>  int.parse(bnToEnNumberConvert(a.dayraNo!))
@@ -224,7 +169,7 @@ class DatabaseProvider extends ChangeNotifier{
       await FirebaseFirestore.instance.collection('MadokDondobidhi').get().then((snapshot){
         _madokDataList.clear();
         _newMadokData=0;
-        snapshot.docChanges.forEach((element) {
+        for (var element in snapshot.docChanges) {
           BodliKhanaModel bodliKhanaModel = BodliKhanaModel(
               id: element.doc['id'],
               amoliAdalot: element.doc['amoli_adalot'],
@@ -240,7 +185,7 @@ class DatabaseProvider extends ChangeNotifier{
           );
           _madokDataList.add(bodliKhanaModel);
           if(element.doc['entry_date']==todayDate) _newMadokData++;
-        });
+        }
       });
       ///Sorting Data
       _madokDataList.sort((a,b)=>  int.parse(bnToEnNumberConvert(a.dayraNo!))
@@ -258,7 +203,7 @@ class DatabaseProvider extends ChangeNotifier{
       await FirebaseFirestore.instance.collection('BishesTribunal').get().then((snapshot){
         _tribunalDataList.clear();
         _newTribunalData=0;
-        snapshot.docChanges.forEach((element) {
+        for (var element in snapshot.docChanges) {
           BodliKhanaModel bodliKhanaModel = BodliKhanaModel(
               id: element.doc['id'],
               amoliAdalot: element.doc['amoli_adalot'],
@@ -274,7 +219,7 @@ class DatabaseProvider extends ChangeNotifier{
           );
           _tribunalDataList.add(bodliKhanaModel);
           if(element.doc['entry_date']==todayDate) _newTribunalData++;
-        });
+        }
       });
       ///Sorting Data
       _tribunalDataList.sort((a,b)=>  int.parse(bnToEnNumberConvert(a.dayraNo!))
